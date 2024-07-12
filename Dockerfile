@@ -1,32 +1,41 @@
-# Gunakan image dasar node:20
-FROM node:20
+# Use the specified Node.js version
+FROM node:22
 
-# Update dan instal dependencies yang dibutuhkan
+# Update and install dependencies
 RUN apt-get update && \
     apt-get install -y \
     ffmpeg \
     imagemagick \
+    libjpeg-dev \
+    libcairo2-dev \
+    libpango1.0-dev \
+    libgif-dev \
+    build-essential \
+    g++ \
     webp && \
     apt-get upgrade -y && \
     rm -rf /var/lib/apt/lists/*
 
-# Atur direktori kerja
+# Set the working directory
 WORKDIR /app
 
-# Salin package.json ke direktori kerja
+# Copy package.json to the working directory
 COPY package.json ./
 
-# Instal dependensi menggunakan npm
+# Install dependencies
 RUN npm install
 
-# Instal pm2 secara global
+# Rebuild canvas to ensure it's compatible with the Docker environment
+RUN npm rebuild canvas
+
+# Install pm2 globally
 RUN npm install pm2 -g
 
-# Salin semua file aplikasi ke direktori kerja
+# Copy the rest of the application files
 COPY . .
 
-# Ekspos port 3000
+# Expose port 3000
 EXPOSE 3000
 
-# Mulai aplikasi menggunakan PM2
-CMD ["pm2-runtime", "start", "index.js"]
+# Start the application using PM2
+CMD ["pm2-runtime", "index.js"]
