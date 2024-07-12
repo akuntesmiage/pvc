@@ -12,7 +12,7 @@ WORKDIR /app
 
 COPY package.json ./
 
-RUN yarn install
+RUN npm install
 
 RUN npm install pm2 -g
 
