@@ -28,9 +28,6 @@ RUN npm install
 # Rebuild canvas to ensure it's compatible with the Docker environment
 RUN npm rebuild canvas
 
-# Install pm2 globally
-RUN npm install pm2 -g
-
 # Copy the rest of the application files
 COPY . .
 
@@ -38,4 +35,4 @@ COPY . .
 EXPOSE 3000
 
 # Start the application using PM2
-CMD ["pm2-runtime", "index.js"]
+CMD ["node", "index.js"]
